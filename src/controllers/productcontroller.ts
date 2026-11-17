@@ -1,4 +1,6 @@
 import type { IncomingMessage, ServerResponse } from "http";
+import { productService } from "../service/product.service";
+
 
 const ProductController = (req: IncomingMessage, res: ServerResponse) => {
 
@@ -8,18 +10,9 @@ const ProductController = (req: IncomingMessage, res: ServerResponse) => {
 
   if (url === "/products" && method === "GET") {
 
-    const products =[
-      {
-      id:1,
-      name:"product-1",
-      price:2000
-    },
-      {
-      id:2,
-      name:"product-2",
-      price:1000
-    },
-  ]
+
+   const products = productService();
+   
     res.writeHead(200, { 'Content-Type': 'Application/json' });
     res.end(JSON.stringify({ message: "products retrived successfully",data:products }))
   }
