@@ -1,9 +1,11 @@
 import type { IncomingMessage, ServerResponse } from "http";
-import { productService } from "../service/product.service";
+import { productService, createProduct } from '../service/product.service';
 import type { Iproduct } from "../types/products";
+import { BodyParser } from "../utils/parseBody";
 
 
-const ProductController = (req: IncomingMessage, res: ServerResponse) => {
+
+const ProductController = async (req: IncomingMessage, res: ServerResponse) => {
 
 
   const url = req.url;
@@ -14,13 +16,16 @@ const ProductController = (req: IncomingMessage, res: ServerResponse) => {
   console.log(typeof id);
 
   if (url === "/products" && method === "GET") {
-
+      
+  
 
     const products = productService();
 
     res.writeHead(200, { 'Content-Type': 'Application/json' });
     res.end(JSON.stringify({ message: "products retrived successfully", data: products }))
-  } else if (method === "GET" && id !== null) {
+  }
+  // single product
+   else if (method === "GET" && id !== null) {
 
     const products = productService();
 
@@ -29,6 +34,27 @@ const ProductController = (req: IncomingMessage, res: ServerResponse) => {
     res.writeHead(200, { 'Content-Type': 'Application/json' });
     res.end(JSON.stringify({ message: "products retrived successfully", data: product }))
 
+  }else if(method === "POST" && url === "/products"){
+
+    const body = await BodyParser(req)
+    // console.log ("body", body);
+    
+    const newPeoduct = {
+      id:Date.now(),
+      ...body
+    }
+    console.log(newPeoduct);
+    const products = productService();
+
+
+    products.push(newPeoduct);
+
+  createProduct(products)
+      res.writeHead(200, { 'Content-Type': 'Application/json' });
+    res.end(JSON.stringify({ message: "products retrived successfully",
+       data: products
+    }))
+    
   }
 
 
