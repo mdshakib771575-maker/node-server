@@ -1,5 +1,6 @@
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 import RouteHandelar from './routers/route';
+import config from "./config";
 
 const server: Server = createServer((req: IncomingMessage, res: ServerResponse) => {
     // console.log("Request",req);
@@ -8,6 +9,6 @@ const server: Server = createServer((req: IncomingMessage, res: ServerResponse) 
     RouteHandelar(req,res)
 })
 
-server.listen(5000, () => {
-    console.log("server is running!!");
+server.listen(config.port, () => {
+    console.log(`server is running on the port ${config.port}`);
 })
